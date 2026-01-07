@@ -1,0 +1,24 @@
+{
+  "name": "uptime-monitoring",
+  "version": "0.1.0",
+  "description": "Scalable uptime monitoring system for 5k+ websites",
+  "main": "api/server.js",
+  "scripts": {
+    "start:scheduler": "node scheduler/index.js",
+    "start:worker": "node worker/index.js",
+    "start:api": "node api/server.js",
+    "dev": "npm run start:scheduler & npm run start:worker & npm run start:api",
+    "test": "node test/run_all.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cacheable-lookup": "^7.0.0",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "mysql2": "^3.9.2",
+    "pg": "^8.11.3",
+    "pm2": "^5.4.0",
+    "undici": "^5.28.2"
+  }
+}

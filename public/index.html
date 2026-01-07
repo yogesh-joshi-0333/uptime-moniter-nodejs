@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uptime Monitoring Live Logs</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1 { color: #333; }
+    #logs { max-height: 80vh; overflow-y: auto; background: #fff; padding: 10px; border: 1px solid #ccc; }
+    .log-entry { margin-bottom: 5px; }
+    .up { color: green; }
+    .down { color: red; }
+    button { padding: 8px 12px; margin-top: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Uptime Monitoring – Live Logs</h1>
+  <div id="logs"></div>
+  <button id="killBtn">Kill All Pending Jobs</button>
+
+  <script>
+    const logsDiv = document.getElementById('logs');
+    const evtSource = new EventSource('/logs/stream');
+    evtSource.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      const el = document.createElement('div');
+      el.className = 'log-entry';
+      const statusClass = data.status === 'up' ? 'up' : 'down';
+      el.innerHTML = `<span class="${statusClass}">${data.url}</span> → ${data.status} in ${data.responseTime} ms`;
+      logsDiv.appendChild(el);
+      logsDiv.scrollTop = logsDiv.scrollHeight;
+    };
+
+    document.getElementById('killBtn').addEventListener('click', async () => {
+      const res = await fetch('/admin/kill', { method: 'POST' });
+      const result = await res.json();
+      alert(result.status);
+    });
+  </script>
+</body>
+</html>
